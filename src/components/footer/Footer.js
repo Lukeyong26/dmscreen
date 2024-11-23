@@ -1,23 +1,23 @@
 import React from 'react'
 import Box from '@mui/material/Box';
-import BottomNavigation from '@mui/material/BottomNavigation';
-import BottomNavigationAction from '@mui/material/BottomNavigationAction';
+import { Button } from '@mui/material';
 
 function Footer() {
-    const [value, setValue] = React.useState(0);
     return (
-        <Box sx={{ position: 'fixed', bottom: 0, right: 0}}>
-            <BottomNavigation
-                showLabels
-                value={value}
-                onChange={(event, newValue) => {
-                    setValue(newValue);
-            }}
-        >
-                <BottomNavigationAction label="Recents"/>
-                <BottomNavigationAction label="Favorites" />
-                <BottomNavigationAction label="Nearby"/>
-            </BottomNavigation>
+        <Box sx={{
+            position: 'fixed', 
+            width:1, height: 60,
+            bottom: 0, 
+            bgcolor: 'black',
+        }}>
+            <Box sx={{ 
+                position: 'absolute', 
+                right: 0,
+                top: '10px',
+                bgcolor: 'white'
+            }}>
+                <Button>Add</Button>
+            </Box>
         </Box>
     )
 }
