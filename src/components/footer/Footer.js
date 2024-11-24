@@ -11,8 +11,8 @@ function Footer() {
             bgcolor: 'black',
         }}>
             <Box sx={{ 
-                position: 'absolute', 
-                right: 0,
+                position: 'absolute',
+                right: '10px',
                 top: '10px',
                 bgcolor: 'white'
             }}>
