@@ -41,7 +41,10 @@ function App() {
             <Box 
               key={mod.key} 
               data-grid={{x: mod.x, y: mod.y, w: mod.w, h: mod.h}}
-              sx={{bgcolor:'black', overflow: 'hidden', borderRadius: '10px', border: 1, borderColor: 'blue'}}
+              sx={{
+                bgcolor:'grey', overflow: 'hidden', overflowY: 'scroll',
+                border: '1px solid', borderColor: 'grey.300'
+              }}
             >
               {mod.content}
             </Box>
@@ -52,7 +55,7 @@ function App() {
           position: 'fixed',
           right: '10px',
           bottom: '10px',
-        }} color='primary' onClick={()=> addModule(0)}
+        }} color='primary' onClick={()=> addModule(1)}
       >
         Add
       </Fab>
