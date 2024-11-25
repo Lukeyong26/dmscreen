@@ -1,4 +1,4 @@
-import { Box, Button, Fab } from '@mui/material';
+import { Box, Button, Fab, IconButton } from '@mui/material';
 import './App.css';
 import { Responsive, WidthProvider } from "react-grid-layout";
 import RulesText from './components/dndRules/RulesText';
@@ -6,21 +6,23 @@ import Initiative from './components/initative/Initiative';
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
 import { useState } from 'react';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import DragHandleIcon from '@mui/icons-material/DragHandle';
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
 const moduleList = [<RulesText/>, <Initiative/>]
 
 function App() {
-  const [modules, setModules] = useState([])
-
-  
+  const [modules, setModules] = useState([]);
 
   function addModule(mod) {
+    const key = new Date().getTime().toString() + 'a'
     setModules([
       ...modules,
       {
-        i : modules.length,
+        i : key,
         x: 0, y: 0, w: 2, h: 2,
         content: mod
       }
@@ -32,12 +34,14 @@ function App() {
       const newItem = layout.at(mod.i)
       return {...mod, x:newItem.x, y:newItem.y, w:newItem.w, h:newItem.h };
     });
-    console.log(newLayout)
-    setModules(newLayout)
+    // console.log(newLayout);
+    setModules(newLayout);
   }
 
-  function deleteModule() {
-
+  function deleteModule(i) {
+    const newLayout = modules.filter((mod) => mod.i !== i);
+    console.log(newLayout)
+    setModules(newLayout)
   }
 
   return (
@@ -47,11 +51,8 @@ function App() {
           className="layout"
           breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
           cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
-          rowHeight={100}
-          width={1200}
-          margin={[5,5]}
-          compactType={null}
-          onLayoutChange={updateLayout}
+          rowHeight={100} width={1200} margin={[5,5]} compactType={null}
+          onLayoutChange={updateLayout} draggableHandle='.drag-handle'
         >
           {modules.map((mod)=> (
             <Box 
@@ -62,17 +63,30 @@ function App() {
                 border: '1px solid', borderColor: 'grey.500', 
               }}
             >
-              <Box sx={{bgcolor: 'white', display:'flex', flexDirection: 'column', width: "15px"}}>
-                <Button onClick={deleteModule}>x</Button>
-                <Button onClick={deleteModule}>y</Button>
+              
+              <Box 
+                alignItems={'center'}
+                // justifyContent={'center'}
+                sx={{
+                  bgcolor: '', display:'flex', flexDirection: 'column', width: "20px"
+                }}  
+              >
+                <IconButton onClick={deleteModule}>
+                  <DragHandleIcon className='drag-handle' sx={{color:'white', fontSize: '15px'}}/>
+                </IconButton>
+                
+                <IconButton onClick={deleteModule}>
+                  <EditIcon sx={{color:'white', fontSize: '15px'}}/>
+                </IconButton>
+
+                <IconButton onClick={()=> deleteModule(mod.i)}>
+                  <DeleteIcon sx={{color:'white', fontSize: '15px'}}/>
+                </IconButton>
               </Box>
               
               <Box 
                 sx={{
-                  height: 1, 
-                  typography: 'body2',
-                  overflow: 'hidden', 
-                  overflowY: 'scroll', 
+                  height: 1, typography: 'body2', overflow: 'hidden', overflowY: 'scroll', 
                   scrollbarWidth: 'thin'
                 }}
               >
