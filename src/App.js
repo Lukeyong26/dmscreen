@@ -1,4 +1,4 @@
-import { Box, Fab } from '@mui/material';
+import { Box, Button, Fab } from '@mui/material';
 import './App.css';
 import { Responsive, WidthProvider } from "react-grid-layout";
 import RulesText from './components/dndRules/RulesText';
@@ -14,15 +14,30 @@ const moduleList = [<RulesText/>, <Initiative/>]
 function App() {
   const [modules, setModules] = useState([])
 
+  
+
   function addModule(mod) {
     setModules([
       ...modules,
       {
-        key : modules.length,
-        x: 0, y: 0, w: 1, h: 1,
-        content: moduleList.at(mod)
+        i : modules.length,
+        x: 0, y: 0, w: 2, h: 2,
+        content: mod
       }
     ]);
+  }
+
+  function updateLayout(layout) {
+    const newLayout = modules.map(mod => {
+      const newItem = layout.at(mod.i)
+      return {...mod, x:newItem.x, y:newItem.y, w:newItem.w, h:newItem.h };
+    });
+    console.log(newLayout)
+    setModules(newLayout)
+  }
+
+  function deleteModule() {
+
   }
 
   return (
@@ -35,18 +50,35 @@ function App() {
           rowHeight={100}
           width={1200}
           margin={[5,5]}
-          verticalCompact={false}
+          compactType={null}
+          onLayoutChange={updateLayout}
         >
           {modules.map((mod)=> (
             <Box 
-              key={mod.key} 
+              key={mod.i} 
               data-grid={{x: mod.x, y: mod.y, w: mod.w, h: mod.h}}
               sx={{
-                bgcolor:'grey', overflow: 'hidden', overflowY: 'scroll',
-                border: '1px solid', borderColor: 'grey.300'
+                display: 'flex', flexDirection: 'row',
+                border: '1px solid', borderColor: 'grey.500', 
               }}
             >
-              {mod.content}
+              <Box sx={{bgcolor: 'white', display:'flex', flexDirection: 'column', width: "15px"}}>
+                <Button onClick={deleteModule}>x</Button>
+                <Button onClick={deleteModule}>y</Button>
+              </Box>
+              
+              <Box 
+                sx={{
+                  height: 1, 
+                  typography: 'body2',
+                  overflow: 'hidden', 
+                  overflowY: 'scroll', 
+                  scrollbarWidth: 'thin'
+                }}
+              >
+                {moduleList.at(mod.content)}
+              </Box>
+              
             </Box>
           ))}
         </ResponsiveGridLayout>
@@ -55,7 +87,7 @@ function App() {
           position: 'fixed',
           right: '10px',
           bottom: '10px',
-        }} color='primary' onClick={()=> addModule(1)}
+        }} color='primary' onClick={()=> addModule(0)}
       >
         Add
       </Fab>
