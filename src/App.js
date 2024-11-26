@@ -1,4 +1,4 @@
-import { Box, Button, Fab, IconButton } from '@mui/material';
+import { Box, Fab, IconButton } from '@mui/material';
 import './App.css';
 import { Responsive, WidthProvider } from "react-grid-layout";
 import RulesText from './components/dndRules/RulesText';
@@ -9,13 +9,23 @@ import { useState } from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import DragHandleIcon from '@mui/icons-material/DragHandle';
+import ModuleMenu from './components/moduleMenu/ModuleMenu';
+import SpellsList from './components/dndRules/SpellsList';
+import AddIcon from '@mui/icons-material/Add';
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
-const moduleList = [<RulesText/>, <Initiative/>]
+const moduleList = [<RulesText/>, <Initiative/>, <SpellsList/>];
+const moduleObjects = [
+  {index: 0, modName: 'D&D Rules'},
+  {index: 1, modName: 'Initiative Tracker'},
+  {index: 2, modName: 'Spells List'},
+];
 
 function App() {
   const [modules, setModules] = useState([]);
+  const [status, setStatus] = useState(false);
+  const [editMode, setEditMode] = useState(null)
 
   function addModule(mod) {
     const key = new Date().getTime().toString() + 'a'
@@ -23,7 +33,7 @@ function App() {
       ...modules,
       {
         i : key,
-        x: 0, y: 0, w: 2, h: 2,
+        x: 0, y: 0, w: 4, h: 2,
         content: mod
       }
     ]);
@@ -31,7 +41,7 @@ function App() {
 
   function updateLayout(layout) {
     const newLayout = modules.map(mod => {
-      const newItem = layout.at(mod.i)
+      const newItem = layout.find(item => item.i === mod.i);
       return {...mod, x:newItem.x, y:newItem.y, w:newItem.w, h:newItem.h };
     });
     // console.log(newLayout);
@@ -40,9 +50,35 @@ function App() {
 
   function deleteModule(i) {
     const newLayout = modules.filter((mod) => mod.i !== i);
-    console.log(newLayout)
+    // console.log(newLayout)
     setModules(newLayout)
   }
+
+  const editModule = (mod) => {
+    console.log(mod)
+    console.log(editMode)
+    const newLayout = modules.map(module => {
+      if (module.i === editMode.key) {
+        return {...module, content: mod};
+      } else {
+        return {...module};
+      }
+    });
+    // console.log(newLayout);
+    setModules(newLayout);
+    setEditMode(null);
+  }
+
+  const openModMenu = (modKey) => {
+    // console.log(modKey)
+    setEditMode(null);
+    if (modKey !== "") {
+      setEditMode({key: modKey, mode: true})
+    }
+    setStatus((prevStatus) => !prevStatus);
+  };
+
+  
 
   return (
     <div className="App">
@@ -50,7 +86,7 @@ function App() {
         <ResponsiveGridLayout
           className="layout"
           breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-          cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
+          cols={{ lg: 20, md: 15, sm: 10, xs: 8, xxs: 4 }}
           rowHeight={100} width={1200} margin={[5,5]} compactType={null}
           onLayoutChange={updateLayout} draggableHandle='.drag-handle'
         >
@@ -65,29 +101,35 @@ function App() {
             >
               
               <Box 
-                alignItems={'center'}
+                // alignItems={'center'}
                 // justifyContent={'center'}
                 sx={{
                   bgcolor: '', display:'flex', flexDirection: 'column', width: "20px"
                 }}  
               >
-                <IconButton onClick={deleteModule}>
-                  <DragHandleIcon className='drag-handle' sx={{color:'white', fontSize: '15px'}}/>
-                </IconButton>
-                
-                <IconButton onClick={deleteModule}>
-                  <EditIcon sx={{color:'white', fontSize: '15px'}}/>
-                </IconButton>
+                <Box>
+                  <IconButton>
+                    <DragHandleIcon className='drag-handle' sx={{color:'white', fontSize: '15px'}}/>
+                  </IconButton>
+                </Box>
 
-                <IconButton onClick={()=> deleteModule(mod.i)}>
-                  <DeleteIcon sx={{color:'white', fontSize: '15px'}}/>
-                </IconButton>
+                <Box sx={{marginTop:'auto'}}>
+                  <IconButton onClick={() => openModMenu(mod.i)}>
+                    <EditIcon sx={{color:'white', fontSize: '15px'}}/>
+                  </IconButton>
+
+                  <IconButton onClick={() => deleteModule(mod.i)}>
+                    <DeleteIcon sx={{color:'white', fontSize: '15px'}}/>
+                  </IconButton>
+                </Box>
+                
               </Box>
               
               <Box 
                 sx={{
-                  height: 1, typography: 'body2', overflow: 'hidden', overflowY: 'scroll', 
+                  height: 1, width: 1, typography: 'body2', overflow: 'hidden', overflowY: 'scroll', 
                   scrollbarWidth: 'thin'
+                  
                 }}
               >
                 {moduleList.at(mod.content)}
@@ -97,13 +139,24 @@ function App() {
           ))}
         </ResponsiveGridLayout>
       </div>
-      <Fab sx={{
+      <Fab 
+        sx={{
           position: 'fixed',
           right: '10px',
           bottom: '10px',
-        }} color='primary' onClick={()=> addModule(0)}
+          bgcolor: '#ffffe6'
+        }} 
+        // color='primary'
+        onClick={() => openModMenu("")}
       >
-        Add
+        <ModuleMenu
+          isOpen={status}
+          moduleList={moduleObjects}
+          isEditMode={editMode}
+          addModule={addModule}
+          editModule={editModule}
+        />
+        <AddIcon/>
       </Fab>
     </div>
   );
