@@ -55,8 +55,8 @@ function App() {
   }
 
   const editModule = (mod) => {
-    console.log(mod)
-    console.log(editMode)
+    // console.log(mod)
+    // console.log(editMode)
     const newLayout = modules.map(module => {
       if (module.i === editMode.key) {
         return {...module, content: mod};
