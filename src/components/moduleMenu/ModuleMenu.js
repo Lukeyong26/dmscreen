@@ -27,7 +27,7 @@ const ModuleMenu = ({ isOpen, moduleList, isEditMode, addModule, editModule }) =
               <MenuList sx={{bgcolor: 'rgb(10, 13, 22)', mt: '5px'}}>
                 {moduleList.map((module) => (
                   <MenuItem key={module.index} value={module.index} onClick={(e) => addModule(e.target.value)}>
-                    + {module.modName}
+                    {module.modName}
                   </MenuItem>
                 ))}
               </MenuList>
@@ -35,7 +35,7 @@ const ModuleMenu = ({ isOpen, moduleList, isEditMode, addModule, editModule }) =
               <MenuList sx={{bgcolor: 'rgb(10, 13, 22)', mt: '5px'}}>
                 {moduleList.map((module) => (
                   <MenuItem key={module.index} value={module.index} onClick={(e) => editModule(e.target.value)}>
-                    + {module.modName}
+                    {module.modName}
                   </MenuItem>
                 ))}
               </MenuList>

@@ -1,4 +1,4 @@
-import { Box, Button, IconButton, Typography } from '@mui/material'
+import { Box, Button, IconButton, TextField, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import { Responsive, WidthProvider } from 'react-grid-layout'
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
@@ -7,8 +7,11 @@ import CloseIcon from '@mui/icons-material/Close';
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
 function Initiative() {
-
-  const [players, setPlayers] = useState([{key:'a',x:0,y:0,turn:false}]);
+  const initialPlayerState = [
+    {key:'a',x:0,y:0,turn:false,playerName:''},
+    {key:'b',x:1,y:0,turn:false,playerName:''}
+  ]
+  const [players, setPlayers] = useState(initialPlayerState);
   const [turn, setTurn] = useState(0)
 
   const addPlayer =()=> {
@@ -71,27 +74,38 @@ function Initiative() {
           <Box
             key={player.key}
             data-grid={{x: player.x, y: player.y, w: 1, h: 1}}
-            sx={{border: '1px solid', borderColor: 'grey.500'}}
+            sx={{border: '2px solid', borderColor: 'grey.500', borderRadius:'10px'}}
           >
             <Box 
               sx={{
                 display: 'flex', flexDirection:'column', 
-                border: '1px solid', borderColor: 'grey.500',
-                height:'110px'
+                borderBottom: '1px solid', borderColor: 'grey.500',
+                height:'110px', alignItems:'center'
               }}
             >
-              <IconButton  sx={{marginLeft: 'auto', color:'white', height:'20%'}} onClick={() => deletePlayer(player.key)}>
-                <CloseIcon sx={{fontSize: '15px'}}/>
-              </IconButton>
-              <Box className='drag-handle-card' sx={{ display:'flex', flexDirection:'column', width: '100%', alignItems:'center', justifyContent:'center'}}>
-                <AccountBoxIcon sx={{fontSize: '50px', mb: '5px'}}/>
-                <Typography>{player.key}</Typography>
+              <Box sx={{marginLeft: 'auto', height:'20%'}} >
+                {players.length > 1 &&
+                  <IconButton  sx={{color:'white'}} onClick={() => deletePlayer(player.key)}>
+                    <CloseIcon sx={{fontSize: '15px'}}/>
+                  </IconButton>
+                }
               </Box>
+
+              <Box className='drag-handle-card' sx={{ display:'flex', width: '100%', alignItems:'center', justifyContent:'center'}}>
+                <AccountBoxIcon sx={{fontSize: '50px', mb: '5px'}}/>
+              </Box>
+              <TextField 
+                id="basic" variant="standard" 
+                size='small'
+                sx={{input: {color:'white', textAlign: 'center', fontSize: '15px'}}}
+              />
             </Box>
+
             {player.turn ? 
-              <Box sx={{width:'100%', height:'28px', mb: '1px', bgcolor:'green'}}/>
+              <Box sx={{width:'100%', height:'29px',  mb: '1px', bgcolor:'green',
+                borderBottomRightRadius:'10px', borderBottomLeftRadius:'10px'}}/>
               :
-              <Box sx={{width:'100%', height:'28px', mb: '1px', bgcolor:''}}/>
+              <Box sx={{width:'100%', height:'29px', mb: '1px', bgcolor:''}}/>
             }
             
           </Box>
