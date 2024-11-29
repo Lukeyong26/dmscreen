@@ -41,5 +41,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@aws-amplify/backend": "^1.8.0",
+    "@aws-amplify/backend-cli": "^1.4.2",
+    "typescript": "^5.7.2"
   }
 }
